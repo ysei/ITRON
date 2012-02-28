@@ -75,7 +75,7 @@ kernel_cfg.c kernel_id.h: system.cfg
 	$(CPP) $(CPPFLAGS) system.cfg | $(HOSCFG) -
 
 # フラッシュ書き込み
-write:
+write: $(TARGET).mot
 	h8write -3069 -f20 $(TARGET).mot /dev/ttyUSB0
 
 
