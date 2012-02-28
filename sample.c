@@ -78,7 +78,10 @@ void Task1(VP_INT exinf)
 		Sci_PutChar('\r');
 		Sci_PutChar('\n');
 		
-		/* 1秒待つ */
+		/*
+         * 1秒待つ
+         * 処理時間を考慮していないので，1秒周期とはならない
+         */
 		dly_tsk(1000);
 	}
 }
