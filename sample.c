@@ -86,6 +86,19 @@ void Task1(VP_INT exinf)
 	}
 }
 
+static void Sci_PutChars( const char *str)
+{
+    const char *p = str;
+    while (*p) Sci_PutChar(*p++);
+}
+void NewTask(VP_INT exinf)
+{
+    for (;;) {
+        Sci_PutChars("HOS - V4 by Project HOS!\r\n");
+        dly_tsk(1000);
+    }
+}
+
 
 /* ------------------------------------------------------------------------ */
 /*  Copyright (C) 1998-2002 by Project HOS                                  */

@@ -13,6 +13,7 @@
 
 void Initialize(VP_INT exinf);
 void Task1(VP_INT exinf);
+void NewTask(VP_INT exinf);
 
 
 #endif	/* __PROJECT_HOS__sample_h__ */
