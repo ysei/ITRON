@@ -45,7 +45,9 @@ int main()
 /* 初期化ハンドラ */
 void Initialize(VP_INT exinf)
 {
+#if 0
 	act_tsk(TSKID_SAMPLE1);
+#endif
 }
 
 
@@ -72,7 +74,7 @@ void Task1(VP_INT exinf)
 		Sci_PutChar('a');
 		Sci_PutChar('s');
 		Sci_PutChar('k');
-		Sci_PutChar('1');
+		Sci_PutChar('0' + exinf);
 		Sci_PutChar('\r');
 		Sci_PutChar('\n');
 		
