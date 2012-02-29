@@ -46,7 +46,15 @@ int main()
 void Initialize(VP_INT exinf)
 {
 #if 1
-	act_tsk(TSKID_SAMPLE1);
+    /*
+     * タスクをキューイングしているので，
+     * 登録した回数だけ，実行される
+     */
+	act_tsk(TSKID_SAMPLE1); /* 1回目 */
+	act_tsk(TSKID_SAMPLE1); /* 2回目 */
+	act_tsk(TSKID_SAMPLE1); /* 3回目 */
+	act_tsk(TSKID_SAMPLE1); /* 4回目 */
+	act_tsk(TSKID_SAMPLE1); /* 5回目 */
 #endif
 }
 
