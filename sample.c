@@ -45,7 +45,7 @@ int main()
 /* 初期化ハンドラ */
 void Initialize(VP_INT exinf)
 {
-#if 1
+#if 0
     /*
      * タスクをキューイングしているので，
      * 登録した回数だけ，実行される
@@ -85,11 +85,31 @@ static void Sci_PutChars( const char *str)
     const char *p = str;
     while (*p) Sci_PutChar(*p++);
 }
-void NewTask(VP_INT exinf)
+void AlertTask(VP_INT exinf)
 {
     for (;;) {
-        Sci_PutChars("HOS - V4 by Project HOS!\r\n");
-        dly_tsk(1000);
+        slp_tsk();
+
+        Sci_PutChars("STOP!\r\n");
+    }
+}
+void MonitorTask(VP_INT exinf)
+{
+    int c;
+    for (;;) {
+
+        c = Sci_GetChar() | 0x20;
+
+        switch (c) {
+        case 'k':
+        case 'i':
+        case 'e':
+        case 'n':
+            wup_tsk(TSKID_ALERT);
+            break;
+        default:
+            break;
+        }
     }
 }
 
