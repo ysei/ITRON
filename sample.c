@@ -45,45 +45,31 @@ int main()
 /* 初期化ハンドラ */
 void Initialize(VP_INT exinf)
 {
-#if 0
+#if 1
 	act_tsk(TSKID_SAMPLE1);
 #endif
 }
 
 
 /* サンプルタスク */
+int count = 1;
+
 void Task1(VP_INT exinf)
 {
-	SYSTIM st;
-	
-	for ( ; ; )
-	{
-		/* タイマ値取得 */
-		get_tim(&st);
-		
-		/* タイマ値出力 */
-		Sci_PutChar('0' + (st.ltime / 10000) % 10);
-		Sci_PutChar('0' + (st.ltime / 1000) % 10);
-		Sci_PutChar('0' + (st.ltime / 100) % 10);
-		Sci_PutChar('0' + (st.ltime / 10) % 10);
-		Sci_PutChar('0' + (st.ltime / 1) % 10);
-		Sci_PutChar(':');
-		
-		/* タスクメッセージ */
-		Sci_PutChar('T');
-		Sci_PutChar('a');
-		Sci_PutChar('s');
-		Sci_PutChar('k');
-		Sci_PutChar('0' + exinf);
-		Sci_PutChar('\r');
-		Sci_PutChar('\n');
-		
-		/*
-         * 1秒待つ
-         * 処理時間を考慮していないので，1秒周期とはならない
-         */
-		dly_tsk(1000);
-	}
+
+    /* タスクメッセージ */
+    Sci_PutChar('C');
+    Sci_PutChar('o');
+    Sci_PutChar('u');
+    Sci_PutChar('n');
+    Sci_PutChar('t');
+    Sci_PutChar('0' + count);
+    Sci_PutChar('\r');
+    Sci_PutChar('\n');
+
+    count++;
+
+    ext_tsk();
 }
 
 static void Sci_PutChars( const char *str)
