@@ -85,31 +85,19 @@ static void Sci_PutChars( const char *str)
     const char *p = str;
     while (*p) Sci_PutChar(*p++);
 }
-void AlertTask(VP_INT exinf)
+void TaskA(VP_INT exinf)
 {
-    for (;;) {
-        slp_tsk();
+    while (1) {
 
-        Sci_PutChars("STOP!\r\n");
-    }
-}
-void MonitorTask(VP_INT exinf)
-{
-    int c;
-    for (;;) {
+        wai_sem(SEMID_SCI);
 
-        c = Sci_GetChar() | 0x20;
+        Sci_PutChars("This is Task");
+        Sci_PutChar(exinf);
+        Sci_PutChars(" message.\r\n");
 
-        switch (c) {
-        case 'k':
-        case 'i':
-        case 'e':
-        case 'n':
-            wup_tsk(TSKID_ALERT);
-            break;
-        default:
-            break;
-        }
+        sig_sem(SEMID_SCI);
+
+        dly_tsk(100 * (exinf - '@'));
     }
 }
 
