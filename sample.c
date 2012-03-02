@@ -15,26 +15,13 @@
 #include "h83069f.h"
 #endif
 #include "h8_sci.h"
+#include <string.h>
 
-
-
+#define XON 0x11
+#define XOFF 0x13
 /* メイン関数 */
 int main()
 {
-	/* SCIの初期化 */
-	Sci_Initialize(SCI_19200);
-	
-	/*
-	ASTCR = 0xff;
-	WCR   = 0xf0;
-	*/
-	
-	/* 開始メッセージ */
-	Sci_PutChar('H');
-	Sci_PutChar('O');
-	Sci_PutChar('S');
-	Sci_PutChar('\r');
-	Sci_PutChar('\n');
 	
 	sta_hos();
 	
@@ -45,59 +32,96 @@ int main()
 /* 初期化ハンドラ */
 void Initialize(VP_INT exinf)
 {
-#if 0
-    /*
-     * タスクをキューイングしているので，
-     * 登録した回数だけ，実行される
-     */
-	act_tsk(TSKID_SAMPLE1); /* 1回目 */
-	act_tsk(TSKID_SAMPLE1); /* 2回目 */
-	act_tsk(TSKID_SAMPLE1); /* 3回目 */
-	act_tsk(TSKID_SAMPLE1); /* 4回目 */
-	act_tsk(TSKID_SAMPLE1); /* 5回目 */
-#endif
+	/* SCIの初期化 */
+	Sci_Initialize(exinf);
 }
 
+typedef struct {
+    T_MSG pk_msg; /* OS管理領域 */
+    int len;
+    ID sender; /* 送信元タスクID */
+    char buf[64];
+} MESSAGE;
 
 /* サンプルタスク */
-int count = 1;
-
-void Task1(VP_INT exinf)
+void appli(VP_INT exinf)
 {
+    char count[9];
+    char task_id[2];
+    MESSAGE msg;
+    ID this;
 
-    /* タスクメッセージ */
-    Sci_PutChar('C');
-    Sci_PutChar('o');
-    Sci_PutChar('u');
-    Sci_PutChar('n');
-    Sci_PutChar('t');
-    Sci_PutChar('0' + count);
-    Sci_PutChar('\r');
-    Sci_PutChar('\n');
+    memset(count,'0',sizeof(count));
+    count[8] = task_id[1] = '\0';
 
-    count++;
-
-    ext_tsk();
-}
-
-static void Sci_PutChars( const char *str)
-{
-    const char *p = str;
-    while (*p) Sci_PutChar(*p++);
-}
-void TaskA(VP_INT exinf)
-{
     while (1) {
+        if (++count[7] > '9') {
+            count[7] = '0';
+            if (++count[6] > '9') {
+                count[6] = '0';
+                if (++count[5] > '9') {
+                    count[5] = '0';
+                    if (++count[4] > '9') {
+                        count[4] = '0';
+                        if (++count[3] > '9') {
+                            count[3] = '0';
+                            if (++count[2] > '9') {
+                                count[2] = '0';
+                                if (++count[1] > '9') {
+                                    count[1] = '0';
+                                    if (++count[0] > '9') {
+                                        count[0] = '0';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        strcpy(msg.buf,"This is test messages from Task");
+        get_tid(&this);
+        task_id[0] = this + '0';
+        strcat(msg.buf,task_id);
+        strcat(msg.buf,". count ");
+        strcat(msg.buf,count);
+        strcat(msg.buf,"\r\n");
+        msg.len = strlen(msg.buf);
+        msg.sender = this;
 
-        wai_sem(SEMID_SCI);
+        snd_mbx(MID_TEST,(T_MSG *)&msg);
 
-        Sci_PutChars("This is Task");
-        Sci_PutChar(exinf);
-        Sci_PutChars(" message.\r\n");
+        slp_tsk();
+    }
+}
+void driver(VP_INT exinf)
+{
 
-        sig_sem(SEMID_SCI);
+    char *ptr;
+    char *limit;
+    unsigned char c;
+    MESSAGE *msg;
 
-        dly_tsk(100 * (exinf - '@'));
+    while (1) {
+        if (SCI1.SSR.BIT.RDRF) {
+            c = SCI1.RDR;
+            SCI1.SSR.BIT.RDRF = 0;
+            while (c == XOFF) {
+                while (!SCI1.SSR.BIT.RDRF);
+                c = SCI1.RDR;
+                SCI1.SSR.BIT.RDRF = 0;
+                if (c == XON) break;
+            }
+        }
+        rcv_mbx(MID_TEST,(T_MSG **)&msg);
+        ptr = msg->buf;
+        limit = &msg->buf[msg->len];
+        while (ptr < limit) {
+            while (!SCI1.SSR.BIT.TDRE);
+            SCI1.TDR = *ptr++;
+            SCI1.SSR.BIT.TDRE = 0;
+        }
+        wup_tsk(msg->sender);
     }
 }
 

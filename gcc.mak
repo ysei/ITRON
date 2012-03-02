@@ -30,7 +30,7 @@ HOSCFG = ../../config/hos4cfg
 CFLAGS   = -Os -Wall -I$(INCDIR) -I$(PACDIR) -mh -c -pipe
 CPPFLAGS = -E -mh -x c
 AFLAGS   = -mh -c
-LFLAGS   = -mh -mrelax -nostartfiles -nostdlib -Wl,-Map,$(TARGET).map \
+LFLAGS   = -mh -mrelax -nostartfiles -Wl,-Map,$(TARGET).map \
 		-Wl,-T$(LDSCRIPT) -L$(LIBDIR)
 LIBS	 = -lgcc -lh4h83
 # ターゲット

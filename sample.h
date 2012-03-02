@@ -17,6 +17,8 @@ void NewTask(VP_INT exinf);
 void AlertTask(VP_INT exinf);
 void MonitorTask(VP_INT exinf);
 void TaskA(VP_INT exinf);
+void appli(VP_INT exinf);
+void driver(VP_INT exinf);
 
 
 #endif	/* __PROJECT_HOS__sample_h__ */

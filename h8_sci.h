@@ -35,6 +35,7 @@ void Sci_Initialize(unsigned char rate);	/* SCI初期化 */
 void Sci_PutChar(char c);					/* １文字出力 */
 int  Sci_GetChar(void);						/* １文字入力 */
 void Sci_RxiHandler(VP_INT exinf);			/* SCI受信割り込み */
+void Sci_PutChars( const char *str);
 
 
 #endif	/* __PROJECT_HOS__h8_sci_h__ */

@@ -74,6 +74,11 @@ void Sci_PutChar(char c)
                             // TDRE が 1→0 になるとシフトレジスターにデータを転送する。
 }
 
+void Sci_PutChars( const char *str)
+{
+    const char *p = str;
+    while (*p) Sci_PutChar(*p++);
+}
 
 /* １文字入力 */
 int Sci_GetChar(void)
@@ -120,13 +125,6 @@ void Sci_RxiHandler(VP_INT exinf)
     /* 受信バッファに格納 */
     recv_buf[tail] = c;
     tail = next;
-}
-
-void Sci_PutChars( char *str)
-{
-    while( *str ) {
-        Sci_PutChar( *str++ ) ;
-    }
 }
 
 /* ------------------------------------------------------------------------ */
