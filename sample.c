@@ -48,7 +48,7 @@ void appli(VP_INT exinf)
 {
     char count[9];
     char task_id[2];
-    MESSAGE msg;
+    MESSAGE* msg;
     ID this;
 
     memset(count,'0',sizeof(count));
@@ -79,19 +79,19 @@ void appli(VP_INT exinf)
                 }
             }
         }
-        strcpy(msg.buf,"This is test messages from Task");
+        /* メモリプールから取得 */
+        get_mpf(MPID_TEST,(VP)&msg);
+        strcpy(msg->buf,"This is test messages from Task");
         get_tid(&this);
         task_id[0] = this + '0';
-        strcat(msg.buf,task_id);
-        strcat(msg.buf,". count ");
-        strcat(msg.buf,count);
-        strcat(msg.buf,"\r\n");
-        msg.len = strlen(msg.buf);
-        msg.sender = this;
+        strcat(msg->buf,task_id);
+        strcat(msg->buf,". count ");
+        strcat(msg->buf,count);
+        strcat(msg->buf,"\r\n");
+        msg->len = strlen(msg->buf);
+        msg->sender = this;
 
-        snd_mbx(MID_TEST,(T_MSG *)&msg);
-
-        slp_tsk();
+        snd_mbx(MID_TEST,(T_MSG *)msg);
     }
 }
 void driver(VP_INT exinf)
@@ -101,6 +101,7 @@ void driver(VP_INT exinf)
     char *limit;
     unsigned char c;
     MESSAGE *msg;
+    T_MSG *pk_msg;
 
     while (1) {
         if (SCI1.SSR.BIT.RDRF) {
@@ -113,7 +114,9 @@ void driver(VP_INT exinf)
                 if (c == XON) break;
             }
         }
-        rcv_mbx(MID_TEST,(T_MSG **)&msg);
+        rcv_mbx(MID_TEST,&pk_msg);
+        msg = (MESSAGE *)pk_msg;
+
         ptr = msg->buf;
         limit = &msg->buf[msg->len];
         while (ptr < limit) {
@@ -121,7 +124,8 @@ void driver(VP_INT exinf)
             SCI1.TDR = *ptr++;
             SCI1.SSR.BIT.TDRE = 0;
         }
-        wup_tsk(msg->sender);
+        /* メモリブロック開放 */
+        rel_mpf(MPID_TEST,(VP)msg);
     }
 }
 
