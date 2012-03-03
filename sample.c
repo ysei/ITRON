@@ -53,7 +53,7 @@ void appli(VP_INT exinf)
     int result;
 
     while (1) {
-        result = api_test(exinf);
+        result = api_twice(exinf);
         Sci_PutChars("I am task ");
         putdval(exinf,0);
         Sci_PutChars(". value = ");

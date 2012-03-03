@@ -1,22 +1,25 @@
-#if 0
+#ifndef API_H
+#define API_H
+
+enum {
+    API_TWICE,
+};
+
 typedef struct {
     T_MSG pk_msg; /* OS管理領域 */
+    unsigned char api;
+    int result;
+    ID id;
+
     union {
         struct {
-            int result;
             int param;
-        } api_1;
+        } twice;
     } un;
-#define pm_api_1 un.api_1
+#define pm_twice un.twice
 } API_PARAM;
-#else
-typedef struct {
-    T_MSG pk_msg; /* OS管理領域 */
-    int result;
-    int param;
-    ID id;
-} API_PARAM;
-#endif
 
-unsigned int api_test(int param);
+unsigned int api_twice(int param);
 void worker(VP_INT exinf);
+
+#endif
