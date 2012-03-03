@@ -14,6 +14,7 @@ typedef struct {
     T_MSG pk_msg; /* OS管理領域 */
     int result;
     int param;
+    ID id;
 } API_PARAM;
 #endif
 

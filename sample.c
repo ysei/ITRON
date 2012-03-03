@@ -51,9 +51,14 @@ typedef struct {
 void appli(VP_INT exinf)
 {
     int result;
+
     while (1) {
         result = api_test(exinf);
+        Sci_PutChars("I am task ");
+        putdval(exinf,0);
+        Sci_PutChars(". value = ");
         putdval(result,0);
+        Sci_PutChars("\r\n");
     }
 }
 void driver(VP_INT exinf)

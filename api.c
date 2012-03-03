@@ -11,8 +11,10 @@ unsigned int api_test(int ap)
     int result;
 
     param.param = ap;
+    get_tid(&param.id);
 
     snd_mbx(MID_WORKER,(T_MSG *)&param);
+    slp_tsk();
 
     rcv_mbx(MID_APP,(T_MSG **)&res);
     result = res->result;
@@ -31,6 +33,7 @@ void worker(VP_INT exinf)
         res.result = param->param * 10;
         dly_tsk(1000);
 
+        wup_tsk(param->id);
         snd_mbx(MID_APP,(T_MSG *)&res);
     }
 }
