@@ -70,6 +70,7 @@ void appli(VP_INT exinf)
         putdval(result,0);
         Sci_PutChars("\r\n");
         api_putchars(buf);
+        api_putbinary(buf,sizeof(buf));
     }
 }
 void driver(VP_INT exinf)
