@@ -3,6 +3,7 @@
 
 enum {
     API_TWICE,
+    API_PUTCHARS,
 };
 
 typedef struct {
@@ -15,8 +16,13 @@ typedef struct {
         struct {
             int param;
         } twice;
+
+        struct {
+            const char* param;
+        } putchars;
     } un;
 #define pm_twice un.twice
+#define pm_putchars un.putchars
 } API_PARAM;
 
 unsigned int api_twice(int param);

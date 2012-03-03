@@ -51,6 +51,16 @@ typedef struct {
 void appli(VP_INT exinf)
 {
     int result;
+    char c;
+    char buf[6];
+    c = 'a' + exinf;
+    buf[0] = '#';
+    buf[1] = c;
+    buf[2] = '#';
+    buf[3] = '\r';
+    buf[4] = '\n';
+    buf[5] = '\0';
+
 
     while (1) {
         result = api_twice(exinf);
@@ -59,6 +69,7 @@ void appli(VP_INT exinf)
         Sci_PutChars(". value = ");
         putdval(result,0);
         Sci_PutChars("\r\n");
+        api_putchars(buf);
     }
 }
 void driver(VP_INT exinf)
