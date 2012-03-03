@@ -37,13 +37,13 @@ LIBS	 = -lgcc -lh4h83
 TARGET = sample
 
 #インクルードファイル
-INCS = kernel_id.h sample.h h8_sci.h
+INCS = kernel_id.h sample.h h8_sci.h api.h lib.h
 
 #リンカスクリプト
 LDSCRIPT = h83069.x
 
 # オブジェクトファイル
-OBJS = crt0.o vector.o sample.o h8_sci.o kernel_cfg.o ostimer.o
+OBJS = crt0.o vector.o sample.o h8_sci.o kernel_cfg.o ostimer.o api.o lib.o
 
 
 # ターゲットモジュール生成
@@ -70,6 +70,12 @@ h8_sci.o: h8_sci.c $(INCS)
 
 ostimer.o: ostimer.c $(INCS)
 	$(CC) $(CFLAGS) ostimer.c
+
+api.o: api.c $(INCS)
+	$(CC) $(CFLAGS) api.c
+
+lib.o: lib.c $(INCS)
+	$(CC) $(CFLAGS) lib.c
 
 kernel_cfg.c kernel_id.h: system.cfg
 	$(CPP) $(CPPFLAGS) system.cfg | $(HOSCFG) -

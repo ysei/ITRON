@@ -16,9 +16,13 @@
 #endif
 #include "h8_sci.h"
 #include <string.h>
+#include "api.h"
+#include "lib.h"
 
 #define XON 0x11
 #define XOFF 0x13
+
+
 /* メイン関数 */
 int main()
 {
@@ -46,52 +50,10 @@ typedef struct {
 /* サンプルタスク */
 void appli(VP_INT exinf)
 {
-    char count[9];
-    char task_id[2];
-    MESSAGE* msg;
-    ID this;
-
-    memset(count,'0',sizeof(count));
-    count[8] = task_id[1] = '\0';
-
+    int result;
     while (1) {
-        if (++count[7] > '9') {
-            count[7] = '0';
-            if (++count[6] > '9') {
-                count[6] = '0';
-                if (++count[5] > '9') {
-                    count[5] = '0';
-                    if (++count[4] > '9') {
-                        count[4] = '0';
-                        if (++count[3] > '9') {
-                            count[3] = '0';
-                            if (++count[2] > '9') {
-                                count[2] = '0';
-                                if (++count[1] > '9') {
-                                    count[1] = '0';
-                                    if (++count[0] > '9') {
-                                        count[0] = '0';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        /* メモリプールから取得 */
-        get_mpf(MPID_TEST,(VP)&msg);
-        strcpy(msg->buf,"This is test messages from Task");
-        get_tid(&this);
-        task_id[0] = this + '0';
-        strcat(msg->buf,task_id);
-        strcat(msg->buf,". count ");
-        strcat(msg->buf,count);
-        strcat(msg->buf,"\r\n");
-        msg->len = strlen(msg->buf);
-        msg->sender = this;
-
-        snd_mbx(MID_TEST,(T_MSG *)msg);
+        result = api_test(exinf);
+        putdval(result,0);
     }
 }
 void driver(VP_INT exinf)
